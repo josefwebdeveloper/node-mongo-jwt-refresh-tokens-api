@@ -6,6 +6,7 @@ const db = require('_helpers/db');
 
 module.exports = {
     authenticate,
+    create,
     refreshToken,
     revokeToken,
     getAll,
@@ -33,6 +34,22 @@ async function authenticate({ username, password, ipAddress }) {
         jwtToken,
         refreshToken: refreshToken.token
     };
+}
+async function create(userParam) {
+    // validate
+    if (await db.User.findOne({ username: userParam.username })) {
+        throw 'Username "' + userParam.username + '" is already taken';
+    }
+
+    const user = new db.User(userParam);
+
+    // hash password
+    if (userParam.password) {
+        user.passwordHash = bcrypt.hashSync(userParam.password, 10);
+    }
+
+    // save user
+    await user.save();
 }
 
 async function refreshToken({ token, ipAddress }) {
