@@ -12,7 +12,7 @@ router.post('/register', register);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.get('/', getAll);
-router.get('/:id', authorize(), getById);
+router.get('/:id', getById);
 router.get('/:id/refresh-tokens', authorize(), getRefreshTokens);
 
 module.exports = router;
